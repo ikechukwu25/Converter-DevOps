@@ -1,0 +1,4 @@
+terraform.tfvars
+terraform.tfvars
+.terraform/
+.terraform/ git commit -m Remove .terraform directory from repository

@@ -1,0 +1,6 @@
+[submodule "QRCode-Generator"]
+	path = QRCode-Generator
+	url = https://github.com/ikechukwu25/QRCode-Generator
+[submodule "QRC-frontend"]
+    path = QRC-frontend
+    url = https://github.com/ikechukwu25/QRC-DevOps/blob/main/QRC-frontend
