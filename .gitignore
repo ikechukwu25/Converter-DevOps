@@ -13,3 +13,6 @@ crash.*.log
 terraform-provider-*
 
 terraform.tfvars
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
