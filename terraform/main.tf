@@ -5,6 +5,48 @@ resource "azurerm_resource_group" "myDevOpsRG" {
   location = "East US"
 }
 
+resource "azurerm_network_security_group" "my_nsg" {
+  name                = "converter_nsg"
+  location            = azurerm_resource_group.myDevOpsRG.location
+  resource_group_name = azurerm_resource_group.myDevOpsRG.name
+
+  security_rule {
+    name                       = "SSH"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTP"
+    priority                   = 1002
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+   name                       = "Custom8080"
+   priority                   = 1003
+   direction                  = "Inbound"
+   access                     = "Allow"
+   protocol                   = "Tcp"  
+   source_port_range          = "*"
+   destination_port_range     = "8080"
+   source_address_prefix      = "*"
+   destination_address_prefix = "*"
+  }
+}
+
+
 resource "azurerm_virtual_network" "my_vnet" {
   name                = "converter_vnet"
   location            = azurerm_resource_group.myDevOpsRG.location
@@ -17,6 +59,11 @@ resource "azurerm_subnet" "my_subnet" {
   resource_group_name  = azurerm_resource_group.myDevOpsRG.name
   virtual_network_name = azurerm_virtual_network.my_vnet.name
   address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "nsg_subnet_assoc" {
+  subnet_id                 = azurerm_subnet.my_subnet.id
+  network_security_group_id = azurerm_network_security_group.my_nsg.id
 }
 
 resource "azurerm_public_ip" "my_public_ip" {
@@ -38,6 +85,13 @@ resource "azurerm_network_interface" "my_nic" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id         = azurerm_public_ip.my_public_ip.id  # Associate public IP
   }
+
+  depends_on = [azurerm_subnet.my_subnet]  # Ensure subnet exists before NIC
+}
+
+resource "azurerm_network_interface_security_group_association" "nsg_nic_assoc" {
+  network_interface_id      = azurerm_network_interface.my_nic.id
+  network_security_group_id = azurerm_network_security_group.my_nsg.id
 }
 
 resource "azurerm_container_registry" "my_acr" {
@@ -54,6 +108,8 @@ resource "azurerm_linux_virtual_machine" "my_vm" {
   resource_group_name   = azurerm_resource_group.myDevOpsRG.name
   network_interface_ids = [azurerm_network_interface.my_nic.id]
   size                  = "Standard_B1ms"
+
+  depends_on = [azurerm_network_interface.my_nic]  # Ensure NIC exists before VM
 
   computer_name                   = var.VMhostname
   admin_username                  = var.admin_username
