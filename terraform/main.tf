@@ -70,7 +70,7 @@ resource "azurerm_public_ip" "my_public_ip" {
   name                         = "myVMPublicIP"
   location                     = azurerm_resource_group.myDevOpsRG.location
   resource_group_name          = azurerm_resource_group.myDevOpsRG.name
-  allocation_method            = "Dynamic"
+  allocation_method            = "Static"
   idle_timeout_in_minutes      = 4
 }
 
