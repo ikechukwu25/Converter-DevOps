@@ -26,7 +26,8 @@ Storage (if needed)
 - Restarts the application container
 4. Application runs on the VM, exposed via Nginx reverse proxy
 
-### Components & Technologies
+
+### Architecture Diagram
 
 ```mermaid
 graph TD;
@@ -38,6 +39,7 @@ graph TD;
     F -->|Stores Docker Images| C;
     C -->|Serves App| G[End Users];
 ```
+
 
 ### Components & Technologies
 
@@ -67,6 +69,7 @@ graph TD;
 - SSHs into Azure VM and pulls the latest image
 - Restarts the container and serves it through Nginx
 - Application is accessible via public IP/domain
+
   
 ### Future Enhancements
 - Move from VM to Kubernetes (AKS)
