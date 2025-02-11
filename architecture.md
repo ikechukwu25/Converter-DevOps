@@ -27,10 +27,13 @@ Restarts the application container
 
 ```mermaid
 graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    B -->|Provision Resources| C[Azure Virtual Machine];
+    C -->|Runs App| D[Docker & Nginx];
+    A -->|Triggers Pipeline| E[Jenkins CI/CD];
+    E -->|Builds & Deploys| F[Azure Container Registry];
+    F -->|Stores Docker Images| C;
+    C -->|Serves App| G[End Users];
 ```
+
 
 
