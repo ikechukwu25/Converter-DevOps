@@ -36,5 +36,37 @@ graph TD;
     C -->|Serves App| G[End Users];
 ```
 
+### Components & Technologies
+
+| **Component** | **Purpose** |
+|--------------|------------|
+| **Terraform** | Automates infrastructure provisioning (Azure VM, ACR, networking) |
+| **GitHub** | Stores the project source code |
+| **Jenkins** | Automates the CI/CD pipeline |
+| **Docker** | Containerizes the application |
+| **Azure Container Registry (ACR)** | Stores the Docker images |
+| **Azure VM** | Runs the containerized application |
+| **Nginx** | Acts as a reverse proxy for the app |
+| **SSH & SCP** | Used for secure connection & file transfer |
 
 
+### Deployment Flow
+1. Infrastructure Provisioning (Terraform)
+- Run `terraform apply` to create Azure resources:
+    - VM
+    - ACR
+    - Networking components (VNet, NSG)
+- VM is configured with Docker & Nginx.
+  
+2. Application Deployment (Jenkins CI/CD)
+- Jenkins triggers build when code is pushed to GitHub
+- Builds & pushes the Docker image to Azure Container Registry
+- SSHs into Azure VM and pulls the latest image
+- Restarts the container and serves it through Nginx
+- Application is accessible via public IP/domain
+  
+### Future Enhancements
+- Move from VM to Kubernetes (AKS)
+- Use Terraform to automate the full CI/CD setup
+- Add monitoring with Prometheus & Grafana
+- Use Azure Key Vault for secrets management
