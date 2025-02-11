@@ -34,3 +34,4 @@ graph TD;
     E -->|Builds & Deploys| F[Azure Container Registry];
     F -->|Stores Docker Images| C;
     C -->|Serves App| G[End Users];
+```
