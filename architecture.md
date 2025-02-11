@@ -24,7 +24,7 @@ Storage (if needed)
 - SSHs into an Azure Virtual Machine (VM) </br>
 - Pulls the latest Docker image from ACR </br>
 - Restarts the application container
-4. Application runs on the VM, exposed via Nginx reverse proxy
+3. Application runs on the VM, exposed via Nginx reverse proxy
 
 
 ### Architecture Diagram
