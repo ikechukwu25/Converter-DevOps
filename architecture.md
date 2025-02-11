@@ -27,6 +27,7 @@ Restarts the application container
 
 ```mermaid
 graph TD;
+    A[GitHub Repo] -->|Push Code| B[Terraform (IaC)];
     B -->|Provision Resources| C[Azure Virtual Machine];
     C -->|Runs App| D[Docker & Nginx];
     A -->|Triggers Pipeline| E[Jenkins CI/CD];
