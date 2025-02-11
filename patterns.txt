@@ -1,0 +1,4 @@
+QRC-frontend/yarn.lock
+backup-QRC-DevOps/objects/pack/pack-fb20c4f5dd282d6b59b5bc473dff8512a0e795a3.pack
+terraform/.terraform/providers/registry.terraform.io/hashicorp/azurerm/4.17.0/darwin_amd64/terraform-provider-azurerm_v4.17.0_x5
+terraform/.terraform/providers/registry.terraform.io/hashicorp/azurerm/3.117.0/darwin_amd64/terraform-provider-azurerm_v3.117.0_x5
