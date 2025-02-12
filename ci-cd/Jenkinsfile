@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE = 'your-app-name:v1'
+        ACR_NAME = 'your-acr-name'
+        ACR_LOGIN_SERVER = 'your-acr-name.azurecr.io'
+        VM_SSH_CREDENTIALS_ID = 'your-ssh-credentials-id'
+        VM_HOST = 'your-vm-ip'
+        VM_USER = "your-vm-username"
+    }
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main',  
+                    url: 'https://github.com/your-github-username/your-repo-name.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh """
+                    cd dev-tools  # Adjust this path if necessary
+                    docker build -t ${DOCKER_IMAGE} .
+                    """
+                }
+            }
+        }
+        stage('Login to Azure Container Registry') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'your-acr-credentials-id', usernameVariable: 'ACR_USERNAME', passwordVariable: 'ACR_PASSWORD')]) {
+                        sh "docker login ${ACR_LOGIN_SERVER} -u $ACR_USERNAME -p $ACR_PASSWORD"
+                    }
+                }
+            }
+        }
+        stage('Push Docker Image to ACR') {
+            steps {
+                script {
+                    sh """
+                    docker images
+                    docker tag your-app-name:latest ${ACR_LOGIN_SERVER}/your-app-name:v1
+                    docker push ${ACR_LOGIN_SERVER}/your-app-name:v1
+                    """
+                }
+            }
+        }
+        stage('Deploy to Azure VM') {
+            steps {
+                script {
+                    sh """
+                    ssh -i /var/lib/jenkins/.ssh/id_rsa -o StrictHostKeyChecking=no ${VM_USER}@${VM_HOST} '
+                    docker pull ${ACR_LOGIN_SERVER}/${DOCKER_IMAGE} &&
+                    docker stop your-app-name || true &&
+                    docker rm your-app-name || true &&
+                    docker run -d --name your-app-name -p 5000:80 ${ACR_LOGIN_SERVER}/${DOCKER_IMAGE}
+                    '
+                    """
+                }
+            }
+        }
+    }
+}
+
