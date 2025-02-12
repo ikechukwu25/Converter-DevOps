@@ -17,12 +17,13 @@ This project sets up an automated DevOps pipeline for deploying a converter appl
 Prerequisites
 Ensure you have the following installed:
 
-Terraform
-Azure CLI
-Git
-Jenkins
-Docker
-Steps to Deploy Infrastructure
+- Terraform 
+- Azure CLI 
+- Git 
+- Jenkins 
+- Docker 
+
+## Steps to Deploy Infrastructure
 
 Clone the Repository </br>
 `git clone https://github.com/ikechukwu25/QRC-DevOps.git` </br>
