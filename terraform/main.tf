@@ -138,8 +138,13 @@ resource "azurerm_linux_virtual_machine" "my_vm" {
               sudo apt-get update
               sudo apt-get install -y docker.io
               sudo apt-get install -y nginx
+              sudo apt-get install -y jenkins
               sudo systemctl enable docker
               sudo systemctl enable nginx
+              sudo systemctl enable jenkins
+              sudo systemctl start docker
+              sudo systemctl start nginx
+              sudo systemctl start jenkins
               EOT
   )
 }
