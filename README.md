@@ -79,65 +79,82 @@ Terraform will provision the following:
 ## Troubleshooting in Terraform
 
 1. Terraform authentication error when using Azure? </br> 
-- Run `az login` and
-- Set the correct subscription: `az account list --output table && az account set --subscription "<SUBSCRIPTION_ID>"`
+   - Run `az login` and
+   - Set the correct subscription: `az account list --output table && az account set --subscription "<SUBSCRIPTION_ID>"`
 
 2. If you've already attempted to create the VM, you might need to destroy and reapply your Terraform changes: 
-- `terraform destroy -auto-approve`
-- `terraform apply -auto-approve`
+   - `terraform destroy -auto-approve`
+   - `terraform apply -auto-approve`
 
 3. You're trying to push a file that exceeds GitHub's file size limit of 100MB. The issue is that Terraform's provider binaries (inside .terraform/providers/) are getting pushed to the repository. These files should not be included in your Git repository. </br> </br> **How to Fix It**
-- Remove `.terraform/` from Git Tracking </br>
-  Run the following commands to remove `.terraform/` from your repository:
-- Remove the `.terraform/` directory from Git tracking </br>
-  `git rm -r --cached .terraform/`
-- Add `.terraform/` to `.gitignore` </br>
-  To prevent this issue in the future, add `.terraform/` to your `.gitignore` file:
-  `echo ".terraform/" >> .gitignore`
-- Check the Large File Before Deleting Run: </br>
-  `git rev-list --objects --all | grep terraform-provider-azurerm`
-
+   - Remove `.terraform/` from Git Tracking </br>
+     Run the following commands to remove `.terraform/` from your repository:
+     
+   - Remove the `.terraform/` directory from Git tracking </br>
+     `git rm -r --cached .terraform/`
+     
+   - Add `.terraform/` to `.gitignore` </br>
+     To prevent this issue in the future, add `.terraform/` to your `.gitignore` file:
+     `echo ".terraform/" >> .gitignore`
+     
+   - Check the Large File Before Deleting Run: </br>
+     `git rev-list --objects --all | grep terraform-provider-azurerm`
 
 4. Your `terraform.tfvars` file likely got committed before being ignored. Just adding it to `.gitignore` won't remove it from Git history. Follow these steps to remove it properly:
-- Remove `terraform.tfvars` from Git History. </br>
-Run this command to remove it from Git tracking: </br>
-`git rm --cached terraform.tfvars`</br>
-This removes the file from Git but keeps it locally.
-- Add `terraform.tfvars` to `.gitignore` </br>
-If not already there, add it: </br>
-`echo "terraform.tfvars" >> .gitignore`
-- Commit the Changes: </br>
-`git add .gitignore`</br>
-`git commit -m "Ignore terraform.tfvars and remove from tracking"`
-- Force Push to GitHub (If Already Pushed)</br>
-If the file was already pushed, you need to remove it from Git history:</br>
-`git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch terraform.tfvars' --prune-empty --tag-name-filter cat -- --all`</br>
-`git push origin --force`
+   - Remove `terraform.tfvars` from Git History. </br>
+      `git rm --cached terraform.tfvars`</br>
+      This removes the file from Git but keeps it locally.
 
-OR (Recommended alternative):
+   - Add `terraform.tfvars` to `.gitignore` </br>
+      If not already there, add it: </br>
+      `echo "terraform.tfvars" >> .gitignore`
 
-`git filter-repo --path terraform.tfvars --invert-paths` </br>
-`git push origin --force`
+   - Commit the Changes: </br>
+      `git add .gitignore`</br>
+      `git commit -m "Ignore terraform.tfvars and remove from tracking"`
 
-- Force Garbage Collection: </br>
-  `rm -rf .git/refs/original/ && git reflog expire --expire=now --all && git gc --prune=now` </br>
-   This cleans up unnecessary files and optimizes the repository.
+   - Force Push to GitHub (If Already Pushed) </br>
+      If the file was already pushed, you need to remove it from Git history:</br>
+      `git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch terraform.tfvars' --prune-empty --tag-name-filter cat -- --all`</br>
+      `git push origin --force`
+   
+      OR (Recommended alternative):
 
+      `git filter-repo --path terraform.tfvars --invert-paths` </br>
+      `git push origin --force`
 
-
-
+   - Force Garbage Collection: </br>
+      `rm -rf .git/refs/original/ && git reflog expire --expire=now --all && git gc --prune=now` </br>
+      This cleans up unnecessary files and optimizes the repository.
 
 
 
 
 
+## Troubleshooting in Jenkins
 
+1. Ensure you have installed Azure CLI and login to ACR before pushing an image
+   - Install Azure CLI on the VM </br>
+     `curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash`
+   - Verify Installation </br>
+      After installation, check if az is available: </br>
+      `az --version` </br>
+   - If it works, login: </br>
+      `az login` </br>
+   - If the VM has no browser, use: </br>
+      `az login --use-device-code` </br>
+      This will give you a code to enter at https://aka.ms/devicelogin.
+   - Once logged into Azure, you should proceed with Docker Login </br>
+   - Once logged into Azure, you should login  </br>
+      `az acr login --name converteracr` </br>
+   - Then, try pushing your Docker image again: </br>
+      `docker push converteracr.azurecr.io/converterapp:v.01`
 
-Jenkins
+2. Docker Push Fails? Ensure you're logged in to the Azure and Azure Container Registry:
+   Here's how to fix the ACR authentication issue
+   `az acr login --name youracr`.
 
-- Docker Push Fails? Ensure you're logged in: `az acr login --name youracr`.
-
-- Jenkins Pipeline Fails? Check logs and ensure Azure credentials are configured correctly.
+5. Jenkins Pipeline Fails? Check logs and ensure Azure credentials are configured correctly.
   
 
 
