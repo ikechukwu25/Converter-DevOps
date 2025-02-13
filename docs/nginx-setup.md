@@ -65,28 +65,28 @@ If your VM's public IP is still showing the default Nginx welcome page instead o
 
 - Ensure Nginx is Using the Correct Configuration: </br>
     Run the following command to check the active configuration: </br>
-    `sudo nginx -t` </br>
+    `sudo nginx -t` </br></br>
     If you see any errors, fix them before proceeding.
 
 - Then, make sure your custom configuration is enabled: </br>
-    `ls -l /etc/nginx/sites-enabled/` </br>
+    `ls -l /etc/nginx/sites-enabled/` </br></br>
     The expected output should show a symbolic link to converter-app: </br>
-    `lrwxrwxrwx 1 root root 34 Feb 12 12:00 /etc/nginx/sites-enabled/converter-app -> /etc/nginx/sites-available/converter-app` </br>
+    `lrwxrwxrwx 1 root root 34 Feb 12 12:00 /etc/nginx/sites-enabled/converter-app -> /etc/nginx/sites-available/converter-app` </br></br>
     If it's missing, manually create the symlink: </br>
     `sudo ln -s /etc/nginx/sites-available/converter-app /etc/nginx/sites-enabled/` </br>
     `sudo systemctl restart nginx`
 
 - Remove the Default Nginx Page </br>
-    The default Nginx page appears if Nginx is still loading the default config. </br>
+    The default Nginx page appears if Nginx is still loading the default config. </br></br>
     Disable it by removing the symlink: </br>
     `sudo rm /etc/nginx/sites-enabled/default` </br>
     `sudo systemctl restart nginx`
 
 - Confirm Your Application is Running on Port 5000 </br>
-    Your proxy_pass is forwarding requests to `http://localhost:5000`. </br>
+    Your proxy_pass is forwarding requests to `http://localhost:5000`. </br></br>
     Check if your app is actually running on that port: </br>
     `sudo netstat -tulnp | grep 5000` </br>
-    `sudo ss -tulnp | grep 5000` </br>
+    `sudo ss -tulnp | grep 5000` </br></br>
     If you don't see output:
       - Your app isn’t running, or
       - It's listening on a different port.
