@@ -128,9 +128,6 @@ Terraform will provision the following:
       This cleans up unnecessary files and optimizes the repository.
 
 
-
-
-
 ## Troubleshooting in Jenkins
 
 1. Ensure you have installed Azure CLI and login to ACR before pushing an image
@@ -144,20 +141,141 @@ Terraform will provision the following:
    - If the VM has no browser, use: </br>
       `az login --use-device-code` </br>
       This will give you a code to enter at https://aka.ms/devicelogin.
-   - Once logged into Azure, you should proceed with Docker Login </br>
-   - Once logged into Azure, you should login  </br>
-      `az acr login --name converteracr` </br>
+   - Once logged into Azure, you should proceed with ACR Login </br>
+      `az acr login --name youracr` </br>
    - Then, try pushing your Docker image again: </br>
-      `docker push converteracr.azurecr.io/converterapp:v.01`
+      `docker push youracr.azurecr.io/converterapp:v.01`
 
-2. Docker Push Fails? Ensure you're logged in to the Azure and Azure Container Registry:
+2. Docker Push Fails? Ensure you're logged in to the Azure and Azure Container Registry:</br>
    Here's how to fix the ACR authentication issue
-   `az acr login --name youracr`.
+   - Verify ACR Login Server </br>
+      Check that your ACR name is correct: </br>
+      `az acr show --name converteracr --query "loginServer" --output table` </br>
+      It should return: </br>
+      `converteracr.azurecr.io` </br>
+      If it's incorrect, update your docker login command.
+   - Use `az acr login` Instead </br>
+      Instead of manually logging in, try this from your local machine: </br>
+      `az acr login --name converteracr` </br>
+      Then retry: </br>
+      `docker login converteracr.azurecr.io`
+   - Use Admin Credentials (If Necessary) </br>
+      By default, ACR admin access is disabled. Enable it temporarily: </br>
+      `az acr update --name converteracr --admin-enabled true` </br>
+      Now, get your ACR username and password: </br>
+      `az acr credential show --name converteracr --query "username" --output tsv` </br>
+      `az acr credential show --name converteracr --query "passwords[0].value" --output tsv`
+   - Then, use these credentials to log in: </br>
+      `docker login converteracr.azurecr.io -u <username> -p <password>` </br>
 
-5. Jenkins Pipeline Fails? Check logs and ensure Azure credentials are configured correctly.
-  
+**N/B**: Both commands accomplish the same purpose—authenticating with Azure Container Registry (ACR)—but they do so in different ways:
+
+** What They Do**
+- Both commands allow you to push and pull container images from ACR.
+- Both store authentication credentials for Docker to use.
+
+**How They Differ?**
+
+| Command                         | Authentication Method     | Security                          | Use Case     |
+|---------------------------------|--------------------------|----------------------------------|----------------|
+| `az acr login --name youracr`   | Azure CLI (OAuth token)  | ✅ More Secure (Token-based)   | Recommended for interactive login |
+| `docker login -u -p`            | Username & Password      | ❌ Less Secure (Static credentials) | Used in scripts, CI/CD pipelines  |
 
 
+**Why Run Both Login Commands?** 
+
+`az acr login --name converteracr` alone is usually enough. It authenticates you using Azure CLI and automatically logs Docker in behind the scenes. </br>
+Running `docker login` manually is not required in most cases.
+
+**When is `docker login` needed separately?** 
+
+If `az acr login` fails for some reason, running `docker login` directly can be a backup method. </br>
+If you're in a CI/CD pipeline, you might not have az installed and need to use `docker login` with service principal credentials.
+
+
+3. Jenkins Pipeline Fails? Check logs and ensure Azure credentials are configured correctly.
+
+4. Steps to Generate and Add SSH Key for Jenkins
+   - Generate a New SSH Key (On Jenkins Server) </br>
+      Run the following commands on the Jenkins server to create an SSH key: </br>
+      `sudo -u jenkins ssh-keygen -t rsa -b 4096 -C "jenkins@convertervm"` </br>
+      When prompted for a file location, use: `/var/lib/jenkins/.ssh/id_rsa` </br>
+      Leave the passphrase empty (just press Enter).
+   - Copy the Public Key to the Azure VM </br>
+      Now, copy the SSH public key to your Azure VM: </br>
+      `sudo -u jenkins ssh-copy-id -i /var/lib/jenkins/.ssh/id_rsa.pub ikechukwuVM@<Azure-VM-IP>`
+   - Manually Test SSH Connection </br>
+      Try SSH from Jenkins to your Azure VM without a password: </br>
+      `sudo -u jenkins ssh -i /var/lib/jenkins/.ssh/id_rsa ikechukwuVM@<Azure-VM-IP>` </br>
+      * If it logs in without asking for a password, SSH is working. 
+      * If it asks for a password, check if `~/.ssh/authorized_keys` on the Azure VM contains the correct key.
+        
+   - Add Jenkins Credentials
+      - Go to Jenkins Dashboard
+      - Manage Jenkins
+      - Manage Credentials
+      - Under Stores scoped to Jenkins, click (global) → Add Credentials
+      - Choose Kind: SSH Username with private key
+      - Enter username (e.g., Jenkins)
+      - Private Key Options:
+         - Select Enter directly and paste the contents of id_rsa
+         - Or choose From a file on Jenkins master if stored securely
+      - Click OK to save
+
+   - Update Jenkins Credentials
+     - Go to Jenkins 
+     - Manage Jenkins 
+     - Manage Credentials 2️⃣
+     - Locate the credential "VM_NAME" 3️⃣
+     - Replace the private key with: `sudo cat /var/lib/jenkins/.ssh/id_rsa`
+     - Save it and restart Jenkins: `sudo systemctl restart jenkins`
+     - Now retry your "Deploy to Azure VM" pipeline stage. It should authenticate successfully using SSH.
+
+5. If you get "Error in libcrypto"
+   - Check If the Key Exists in Jenkins Workspace. Run this command on your Jenkins server. </br>
+      `sudo ls -l /var/lib/jenkins/.ssh/ </br>`
+      If `id_rsa` is missing, you need to generate and add it. </br>
+
+   - Manually Add the SSH Key
+      Try adding the SSH key manually: </br>
+      `sudo -u jenkins ssh-agent bash -c 'ssh-add /var/lib/jenkins/.ssh/id_rsa'` </br>
+      If you get "Error in libcrypto", your private key might be in the wrong format. Proceed to Step 3.
+
+   - Convert the SSH Key to the Correct Format
+      If your SSH key was copied incorrectly or is in an unsupported format, convert it: </br>
+      `sudo -u jenkins ssh-keygen -p -f /var/lib/jenkins/.ssh/id_rsa -m PEM` </br>
+      This forces OpenSSH to reformat the private key.
+
+   - Set Correct Permissions
+      Jenkins needs the correct file permissions: </br>
+      `sudo chmod 600 /var/lib/jenkins/.ssh/id_rsa` </br>
+      `sudo chown jenkins:jenkins /var/lib/jenkins/.ssh/id_rsa` </br>
+      Then, restart Jenkins: </br>
+      `sudo systemctl restart jenkins`
+
+   - Update Your Jenkins Pipeline
+      Modify your Jenkins pipeline to not use ssh-agent, since that is causing the failure. Instead, use the private key directly: </br>
+
+`stage('Deploy to Azure VM') {` </br>
+`    steps {` </br>
+`        script {` </br>
+`            sh """` </br>
+`            ssh -i /var/lib/jenkins/.ssh/id_rsa -o StrictHostKeyChecking=no ${VM_USER}@${VM_HOST} '` </br>
+`            docker pull ${ACR_LOGIN_SERVER}/${DOCKER_IMAGE} &&` </br>
+`            docker stop converter-app || true &&` </br>
+`            docker rm converter-app || true &&` </br>
+`            docker run -d --name converter-app -p 5000:80 ${ACR_LOGIN_SERVER}/${DOCKER_IMAGE}` </br>
+`            '`</br>
+`            """`</br>
+`        }`</br>
+`    }`</br>
+`}`
+
+   - Test SSH Manually
+      Before running the pipeline again, test SSH manually: </br>
+      `sudo -u jenkins ssh -i /var/lib/jenkins/.ssh/id_rsa ${VM_USER}@${VM_HOST}` </br>
+      - If it asks for a password, SSH keys were not copied correctly.
+      - If it logs in successfully, retry your Jenkins pipeline.
 
 
 ### Contributing
