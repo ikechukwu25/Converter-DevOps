@@ -135,17 +135,38 @@ resource "azurerm_linux_virtual_machine" "my_vm" {
 
   custom_data = base64encode(<<-EOT
               #!/bin/bash
+              set -e  # Exit immediately if a command fails
               sudo apt-get update
+              # Update and install required packages
               sudo apt-get install -y docker.io
               sudo apt-get install -y nginx
               sudo apt-get install -y jenkins
+              # Enable services to start on boot
               sudo systemctl enable docker
               sudo systemctl enable nginx
               sudo systemctl enable jenkins
+              # Start the services
               sudo systemctl start docker
               sudo systemctl start nginx
               sudo systemctl start jenkins
-              EOT
+              # Configure Nginx as a Reverse Proxy
+              cat <<EOF | sudo tee /etc/nginx/sites-available/converter-app
+              server {
+                listen 80;
+                location / {
+                  proxy_pass http://localhost:5000;
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Real-IP $remote_addr;
+                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+                }
+              }
+              EOF
+              # Enable the Nginx configuration
+              sudo ln -sf /etc/nginx/sites-available/converter-app /etc/nginx/sites-enabled/
+              # Reload Nginx to apply changes
+              sudo systemctl restart nginx
+            EOT
   )
 }
 
