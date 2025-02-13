@@ -56,7 +56,12 @@ Terraform will provision the following:
 - Public IP & Network Interface 
 - Virtual Machine (VM) 
 - Azure Container Registry (ACR)
-  
+
+</br> </br>
+
+<img width="1300" alt="Screenshot 2025-02-13 at 18 47 21" src="https://github.com/user-attachments/assets/44f3f5e8-d21c-4ce1-9641-437a71a35e21" />
+
+</br> </br>
 
 ## Configure Jenkins CI/CD Pipeline
 - Set up a Jenkins pipeline using Jenkinsfile.
@@ -74,7 +79,19 @@ Terraform will provision the following:
 4. Pushes to ACR → Jenkins pushes the image to Azure Container Registry. </br>
 
 5. Deploys to VM → Pulls the latest image and restarts the service.
+</br></br>
 
+<img width="1333" alt="Screenshot 2025-02-13 at 19 54 48" src="https://github.com/user-attachments/assets/d77862ae-d902-484a-a665-dde8080e5cc6" />
+
+</br></br>
+
+<img width="1334" alt="Screenshot 2025-02-13 at 19 54 04" src="https://github.com/user-attachments/assets/66d714d7-2c6e-44db-8c67-097dd7ed3643" />
+
+</br></br>
+
+<img width="723" alt="Screenshot 2025-02-12 at 19 01 35" src="https://github.com/user-attachments/assets/4bd5f1e6-ec4f-4ee4-b30a-d34bc85aa42a" />
+
+</br> </br>
 
 ## Troubleshooting in Terraform
 
