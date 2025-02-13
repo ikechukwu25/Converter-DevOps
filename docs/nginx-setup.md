@@ -19,15 +19,15 @@ When you configure Nginx as a reverse proxy, you are setting it up to act as an 
 - Caching & Compression – Can improve performance by caching responses and compressing data.
 
 **What Happens When a User Visits Your Site?**
-- User Requests:
+- User Requests: </br>
     A user types http://your-vm-ip/ in their browser.
-- Nginx Handles the Request:
+- Nginx Handles the Request:</br>
     Since it listens on port 80, it receives the request.
-- Nginx Forwards to App:
+- Nginx Forwards to App:</br>
     It redirects the request to http://localhost:5000 (your app running inside the VM).
-- App Responds to Nginx:
+- App Responds to Nginx:</br>
     Your app generates a response (e.g., an HTML page or JSON data).
-- Nginx Sends Response to User:
+- Nginx Sends Response to User:</br>
     The user receives the app's response, but they never see port 5000—only Nginx.
 
 
