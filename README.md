@@ -58,15 +58,15 @@ Update terraform.tfvars with your Azure details:
 
 </br> </br>
 
-<img width="1307" alt="Screenshot 2025-02-14 at 10 53 33" src="https://github.com/user-attachments/assets/d05ff6fb-4300-42f7-8d2b-cc69e3083831" />
-
-</br> </br>
-
 <img width="1302" alt="image" src="https://github.com/user-attachments/assets/a357a151-7a6e-468d-967c-8481cb857f25" />
 
 </br> </br>
 
 <img width="1328" alt="image" src="https://github.com/user-attachments/assets/bd39a41d-ec59-41b4-b270-2020cada49ed" />
+
+</br> </br>
+
+<img width="1304" alt="image" src="https://github.com/user-attachments/assets/7e4e0fa9-5101-401a-a8a8-9fb998f875b0" />
 
 </br> </br>
 
