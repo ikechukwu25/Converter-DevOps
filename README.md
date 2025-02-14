@@ -66,6 +66,10 @@ Update terraform.tfvars with your Azure details:
 
 </br> </br>
 
+<img width="1328" alt="image" src="https://github.com/user-attachments/assets/bd39a41d-ec59-41b4-b270-2020cada49ed" />
+
+</br> </br>
+
 Terraform will provision the following:
 - Azure Resource Group
 - Virtual Network & Subnet 
