@@ -47,8 +47,22 @@ Update terraform.tfvars with your Azure details:
 6. Plan the Deployment </br>
 `terraform plan -var-file="terraform.tfvars" -out=tfplan`
 
+</br> </br>
+
+<img width="1300" alt="Screenshot 2025-02-13 at 18 47 21" src="https://github.com/user-attachments/assets/44f3f5e8-d21c-4ce1-9641-437a71a35e21" />
+
+</br> </br>
+
 7. Apply Terraform Configuration </br>
 `terraform apply -var-file="terraform.tfvars" -auto-approve`
+
+<img width="1307" alt="Screenshot 2025-02-14 at 10 53 33" src="https://github.com/user-attachments/assets/d05ff6fb-4300-42f7-8d2b-cc69e3083831" />
+
+</br> </br>
+
+<img width="1302" alt="image" src="https://github.com/user-attachments/assets/a357a151-7a6e-468d-967c-8481cb857f25" />
+
+</br> </br>
 
 Terraform will provision the following:
 - Azure Resource Group
@@ -57,20 +71,6 @@ Terraform will provision the following:
 - Virtual Machine (VM) 
 - Azure Container Registry (ACR)
 
-</br> </br>
-
-<img width="1300" alt="Screenshot 2025-02-13 at 18 47 21" src="https://github.com/user-attachments/assets/44f3f5e8-d21c-4ce1-9641-437a71a35e21" />
-
-</br> </br>
-
-<img width="1307" alt="Screenshot 2025-02-14 at 10 53 33" src="https://github.com/user-attachments/assets/d05ff6fb-4300-42f7-8d2b-cc69e3083831" />
-
-</br> </br>
-
-<img width="1302" alt="image" src="https://github.com/user-attachments/assets/a357a151-7a6e-468d-967c-8481cb857f25" />
-
-
-</br> </br>
 
 ## Configure Jenkins CI/CD Pipeline
 - Set up a Jenkins pipeline using Jenkinsfile.
