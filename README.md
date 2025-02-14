@@ -63,6 +63,10 @@ Terraform will provision the following:
 
 </br> </br>
 
+<img width="1307" alt="Screenshot 2025-02-14 at 10 53 33" src="https://github.com/user-attachments/assets/d05ff6fb-4300-42f7-8d2b-cc69e3083831" />
+
+</br> </br>
+
 <img width="1302" alt="image" src="https://github.com/user-attachments/assets/a357a151-7a6e-468d-967c-8481cb857f25" />
 
 
