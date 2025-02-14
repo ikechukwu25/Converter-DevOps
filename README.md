@@ -63,6 +63,11 @@ Terraform will provision the following:
 
 </br> </br>
 
+<img width="1302" alt="image" src="https://github.com/user-attachments/assets/a357a151-7a6e-468d-967c-8481cb857f25" />
+
+
+</br> </br>
+
 ## Configure Jenkins CI/CD Pipeline
 - Set up a Jenkins pipeline using Jenkinsfile.
 - Ensure Jenkins has access to the repository and Azure.
