@@ -293,7 +293,6 @@ If you're in a CI/CD pipeline, you might not have az installed and need to use `
 
    - Update Your Jenkins Pipeline
       Modify your Jenkins pipeline to not use ssh-agent, since that is causing the failure. Instead, use the private key directly: </br>
-
 `stage('Deploy to Azure VM') {` </br>
 `    steps {` </br>
 `        script {` </br>
@@ -307,8 +306,7 @@ If you're in a CI/CD pipeline, you might not have az installed and need to use `
 `            """`</br>
 `        }`</br>
 `    }`</br>
-`}`
-
+`}`</br>
    - Test SSH Manually
       Before running the pipeline again, test SSH manually: </br>
       `sudo -u jenkins ssh -i /var/lib/jenkins/.ssh/id_rsa ${VM_USER}@${VM_HOST}` </br>
