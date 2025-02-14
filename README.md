@@ -12,6 +12,11 @@ This project sets up an automated DevOps pipeline for deploying a converter appl
 - Jenkins for CI/CD pipeline automation
 - Nginx for reverse proxy and load balancing
 
+</br> </br>
+
+<img width="1339" alt="image" src="https://github.com/user-attachments/assets/e29e90c3-c5eb-4436-810b-5f426cab30f7" />
+
+</br> </br>
 
 ## Infrastructure Setup with Terraform
 Prerequisites </br>
@@ -82,6 +87,7 @@ Terraform will provision the following:
 - Set up a Jenkins pipeline using Jenkinsfile.
 - Ensure Jenkins has access to the repository and Azure.
 - Run the pipeline to build, test, and deploy the application.
+
 
 ### CI/CD Workflow
 
