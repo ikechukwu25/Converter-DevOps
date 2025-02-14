@@ -56,6 +56,8 @@ Update terraform.tfvars with your Azure details:
 7. Apply Terraform Configuration </br>
 `terraform apply -var-file="terraform.tfvars" -auto-approve`
 
+</br> </br>
+
 <img width="1307" alt="Screenshot 2025-02-14 at 10 53 33" src="https://github.com/user-attachments/assets/d05ff6fb-4300-42f7-8d2b-cc69e3083831" />
 
 </br> </br>
