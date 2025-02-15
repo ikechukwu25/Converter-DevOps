@@ -263,8 +263,8 @@ If you're in a CI/CD pipeline, you might not have az installed and need to use `
    - Update Jenkins Credentials
      - Go to Jenkins 
      - Manage Jenkins 
-     - Manage Credentials 2️⃣
-     - Locate the credential "VM_NAME" 3️⃣
+     - Manage Credentials
+     - Locate the credential "VM_NAME"
      - Replace the private key with: `sudo cat /var/lib/jenkins/.ssh/id_rsa`
      - Save it and restart Jenkins: `sudo systemctl restart jenkins`
      - Now retry your "Deploy to Azure VM" pipeline stage. It should authenticate successfully using SSH.
