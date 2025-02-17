@@ -93,13 +93,15 @@ Terraform will provision the following:
 
 1. Push Code to GitHub → Triggers Jenkins build. </br>
 
-2. Clone the repository → Jenkins clones the latest code. 
+2. Clone the repository → Jenkins clones the latest code. </br>
 
 3. Jenkins Builds & Tests → Builds Docker image and runs tests. </br>
 
-4. Pushes to ACR → Jenkins pushes the image to Azure Container Registry. </br>
+4. Jenkins logs in to Azure → Jenkins is authenticated to login to the cloud platform. </br>
 
-5. Deploys to VM → Pulls the latest image and restarts the service.
+5. Pushes to ACR → Jenkins pushes the image to Azure Container Registry. </br>
+
+6. Deploys to Azure VM → Pulls the latest image and restarts the service.
 </br></br>
 
 <img width="1333" alt="Screenshot 2025-02-13 at 19 54 48" src="https://github.com/user-attachments/assets/d77862ae-d902-484a-a665-dde8080e5cc6" />
